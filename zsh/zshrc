@@ -1,0 +1,81 @@
+# ~/.zshrc — gerenciado por ~/dotfiles (não edite aqui; edite no repo)
+# zsh sem framework: plugins e ferramentas vêm do Homebrew (atualiza com `brew upgrade`).
+# Coisas só desta máquina vão em ~/.zshrc.local (não versionado).
+
+# --- Homebrew e PATH ---------------------------------------------------------
+for b in /opt/homebrew/bin/brew /usr/local/bin/brew /home/linuxbrew/.linuxbrew/bin/brew; do
+  [[ -x "$b" ]] && { eval "$("$b" shellenv)"; break; }
+done
+unset b
+export PATH="$HOME/.local/bin:$PATH"
+
+# --- Completar com Tab ---------------------------------------------------------
+[[ -n "$HOMEBREW_PREFIX" ]] && FPATH="$HOMEBREW_PREFIX/share/zsh-completions:$FPATH"
+autoload -Uz compinit && compinit
+zstyle ':completion:*' menu select                         # navegar com setas
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'  # ignora maiúsculas
+
+# --- Histórico -----------------------------------------------------------------
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=50000
+setopt HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE SHARE_HISTORY INC_APPEND_HISTORY
+
+# --- Teclas --------------------------------------------------------------------
+bindkey -e
+# Seta pra cima/baixo: busca no histórico pelo que já foi digitado
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey '^[[A' up-line-or-beginning-search
+bindkey '^[OA' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search
+bindkey '^[OB' down-line-or-beginning-search
+
+# --- Editor: nvim se tiver, senão VS Code ---------------------------------------
+if (( $+commands[nvim] )); then
+  export EDITOR="nvim"
+else
+  export EDITOR="code --wait"
+fi
+export VISUAL="$EDITOR"
+
+# --- Ferramentas ---------------------------------------------------------------
+(( $+commands[zoxide] ))   && eval "$(zoxide init zsh)"
+(( $+commands[fzf] ))      && source <(fzf --zsh)          # Ctrl+T arquivos, Alt+C pastas
+# atuin depois do fzf, para ficar com o Ctrl+R. Sem seta (fica a busca acima) e sem Atuin AI.
+(( $+commands[atuin] ))    && eval "$(atuin init zsh --disable-up-arrow --disable-ai)"
+(( $+commands[starship] )) && eval "$(starship init zsh)"
+export BAT_THEME="TwoDark"
+
+# --- Aliases -------------------------------------------------------------------
+if (( $+commands[eza] )); then
+  alias ls='eza --group-directories-first --icons'
+  alias ll='eza -lah --git --group-directories-first'
+  alias la='eza -ah --group-directories-first'
+  alias lt='eza --tree --level=2 --group-directories-first --icons'
+fi
+(( $+commands[bat] ))    && alias cat='bat'
+(( $+commands[zoxide] )) && alias cd='z'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias g='git'
+alias gs='git status'
+alias gd='git diff'
+alias gl='git log --oneline --graph --decorate -20'
+alias gco='git checkout'
+alias gsw='git switch'
+alias gp='git push'
+alias gpl='git pull'
+
+# --- Específico da máquina -----------------------------------------------------
+[[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+
+# --- Plugins (syntax-highlighting tem que ser o último) ------------------------
+for f in \
+  "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" \
+  "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+do
+  [[ -r "$f" ]] && source "$f"
+done
+unset f

@@ -1,0 +1,4 @@
+# Histórico só local: sem sync e sem checar atualização => o atuin não faz requisição de rede.
+# Não rodar `atuin register` / `atuin login`.
+auto_sync = false
+update_check = false
