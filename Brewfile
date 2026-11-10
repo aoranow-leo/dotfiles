@@ -22,3 +22,4 @@ cask "font-meslo-lg-nerd-font"
 
 # terminal: instalar à mão onde for permitido
 # cask "herdr-app"
+# cask "obsidian"

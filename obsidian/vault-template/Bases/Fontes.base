@@ -1,0 +1,29 @@
+filters:
+  and:
+    - note.type == "fonte"
+properties:
+  note.source_type:
+    displayName: Tipo
+  note.author:
+    displayName: Autor
+  note.ingested:
+    displayName: Ingerida em
+  note.summary:
+    displayName: Resumo
+views:
+  - type: table
+    name: Todas as fontes
+    groupBy:
+      property: source_type
+      direction: ASC
+    order:
+      - file.name
+      - source_type
+      - author
+      - ingested
+  - type: cards
+    name: Recentes
+    order:
+      - file.name
+      - ingested
+    limit: 20

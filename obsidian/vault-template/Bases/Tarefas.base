@@ -1,0 +1,58 @@
+filters:
+  and:
+    - note.type == "tarefa"
+    - note.status != "concluida"
+    - note.status != "cancelada"
+formulas:
+  atrasada: if(note.due, note.due < today(), false)
+properties:
+  note.status:
+    displayName: Status
+  note.priority:
+    displayName: Prioridade
+  note.due:
+    displayName: Prazo
+  note.project:
+    displayName: Projeto
+  formula.atrasada:
+    displayName: Atrasada?
+views:
+  - type: table
+    name: Em aberto por status
+    groupBy:
+      property: status
+      direction: ASC
+    order:
+      - file.name
+      - project
+      - priority
+      - due
+      - formula.atrasada
+  - type: table
+    name: Próximos 7 dias
+    filters:
+      and:
+        - note.due <= today() + "7 days"
+    order:
+      - file.name
+      - project
+      - due
+      - priority
+  - type: table
+    name: Atrasadas
+    filters:
+      and:
+        - note.due < today()
+    order:
+      - file.name
+      - project
+      - due
+  - type: table
+    name: Prioridade alta
+    filters:
+      and:
+        - note.priority >= 3
+    order:
+      - file.name
+      - project
+      - due

@@ -1,0 +1,31 @@
+filters:
+  and:
+    - note.type == "projeto"
+    - note.status != "arquivado"
+properties:
+  note.status:
+    displayName: Status
+  note.owner:
+    displayName: Responsável
+  note.deadline:
+    displayName: Prazo
+  note.summary:
+    displayName: Resumo
+views:
+  - type: table
+    name: Por status
+    groupBy:
+      property: status
+      direction: ASC
+    order:
+      - file.name
+      - status
+      - owner
+      - deadline
+      - updated
+  - type: cards
+    name: Galeria
+    order:
+      - file.name
+      - status
+      - owner

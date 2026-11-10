@@ -50,6 +50,17 @@ O que já existir vira `<arquivo>.bak.<data>`.
 | `Alt+C` | entrar numa pasta (fzf) |
 | `z <parte do nome>` | pular para uma pasta já visitada (zoxide) |
 
+## Obsidian (wiki local mantida por LLM)
+
+`obsidian/vault-template/` é o esqueleto de um vault no padrão LLM Wiki: `CLAUDE.md` (regras da LLM), templates, Bases, taxonomia e painel. Não tem conteúdo.
+
+```sh
+~/dotfiles/obsidian/new-vault.sh ~/Documents/Wiki            # cria (cópia, sem git, sem sync)
+~/dotfiles/obsidian/new-vault.sh --update ~/Documents/Wiki   # só troca schema, guia, templates e Bases
+```
+
+O vault é uma cópia, não um link: o conteúdo nunca volta para este repo. Por padrão o template não usa git, sync nem plugins da comunidade (ver `CLAUDE.md` §0.1).
+
 ## Regra
 
 Nada de segredo aqui: o repo é público. Token, chave e `.env` ficam fora.
