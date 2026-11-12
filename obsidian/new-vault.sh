@@ -1,7 +1,7 @@
 #!/bin/zsh
 # Cria um vault do Obsidian a partir de um template (cópia, sem git, sem sync).
 #   ~/dotfiles/obsidian/new-vault.sh ~/Documents/Wiki            # completo: projetos, tarefas, specs, Bases
-#   ~/dotfiles/obsidian/new-vault.sh --lite ~/Documents/Wiki     # simples: 3 tipos de página + scripts/wiki.py
+#   ~/dotfiles/obsidian/new-vault.sh --lite ~/Documents/Wiki     # simples, em inglês: 3 tipos de página + scripts/wiki.py
 #   ~/dotfiles/obsidian/new-vault.sh --update ~/Documents/Wiki   # só atualiza os arquivos de sistema
 set -euo pipefail
 HERE="${0:A:h}"
@@ -28,7 +28,7 @@ if [[ -n "$UPDATE" ]]; then
   # Atualiza só o que é "sistema". Conteúdo (e a taxonomia, no completo) fica.
   if [[ -n "$LITE" ]]; then
     TPL="$HERE/vault-template-lite"
-    SYSTEM=("CLAUDE.md" "Guia de Uso.md" "scripts")
+    SYSTEM=("CLAUDE.md" "Guide.md" "scripts")
   else
     TPL="$HERE/vault-template"
     SYSTEM=("CLAUDE.md" "Guia de Uso.md" "Templates" "Bases")
@@ -52,7 +52,7 @@ fi
 mkdir -p "$DEST"
 if [[ -n "$LITE" ]]; then
   cp -R "$HERE/vault-template-lite/." "$DEST/"
-  mkdir -p "$DEST"/{raw,fontes,wiki,notas}
+  mkdir -p "$DEST"/{raw,sources,wiki,notes}
 else
   cp -R "$HERE/vault-template/." "$DEST/"
   mkdir -p "$DEST"/Projetos \

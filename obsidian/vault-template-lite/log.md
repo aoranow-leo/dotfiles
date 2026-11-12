@@ -1,8 +1,8 @@
 ---
 type: sistema
-summary: "O que mudou no wiki, uma linha por mudança, mais novo no topo."
+summary: "What changed in the wiki, one line per change, newest on top."
 ---
 
 # log
 
-- {{DATE}} ajuste: wiki criado a partir do template
+- {{DATE}} fix: wiki created from the template

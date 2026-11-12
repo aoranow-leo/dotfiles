@@ -42,7 +42,11 @@
       "Bash(git -C * push * main)",
       "Bash(git -C * push * master)",
       "Bash(gh pr merge*)",
-      "Read(~/.now-sdk/**)"
+      "Read(~/.now-sdk/**)",
+      "Edit(/refs/**)",
+      "Bash(git -C refs/* commit*)",
+      "Bash(git -C refs/* push*)",
+      "Bash(git -C refs/* add*)"
     ]
   }
 }

@@ -1,7 +1,7 @@
 #!/bin/zsh
 # Cria uma pasta de trabalho com repos de cliente + wiki local lado a lado (a raiz não é git).
 #   ~/dotfiles/workspace/new-workspace.sh [--lite] ~/work/cliente   # cria raiz + wiki/ + guides/
-#   ~/dotfiles/workspace/new-workspace.sh --update ~/work/cliente   # troca CLAUDE.md e .claude/settings.json da raiz
+#   ~/dotfiles/workspace/new-workspace.sh --update ~/work/cliente   # troca CLAUDE.md, .claude/settings.json e tools/docsearch.py
 #   ~/dotfiles/workspace/new-workspace.sh --check  ~/work/cliente   # confere se a estrutura continua segura
 # Os repos você clona depois, dentro da raiz:  git clone <url> ~/work/cliente/<nome>
 set -euo pipefail
@@ -51,7 +51,19 @@ check() {
   local repos=0 d name
   for d in "$DEST"/*(N/); do
     name="${d:t}"
-    [[ "$name" == wiki || "$name" == guides ]] && continue
+    [[ "$name" == wiki || "$name" == guides || "$name" == tools ]] && continue
+    if [[ "$name" == refs ]]; then
+      local r
+      for r in "$d"/*(N/); do
+        if [[ -e "$r/.git" ]]; then
+          if [[ -n "$(git -C "$r" status --porcelain --untracked-files=no 2>/dev/null)" ]]; then
+            warn "refs/${r:t} tem arquivos alterados. refs/ é só leitura: git -C \"$r\" reset --hard"
+          else ok "ref: ${r:t}"; fi
+          [[ -f "$DEST/refs/.search/${r:t}.db" ]] || warn "refs/${r:t} sem índice de busca: python3 tools/docsearch.py index ${r:t}"
+        fi
+      done
+      continue
+    fi
     if [[ -e "$d/.git" ]]; then
       repos=$((repos+1)); ok "repo: $name"
       [[ -f "$d/.claude/settings.json" ]] && warn "$name/.claude/settings.json NÃO vale quando o Claude abre na raiz. Leve as regras dele para o settings.json da raiz."
@@ -75,7 +87,8 @@ case "$MODE" in
   update)
     [[ -f "$DEST/CLAUDE.md" || -d "$DEST/.claude" ]] || { echo "Não parece um workspace: $DEST"; exit 1; }
     mkdir -p "$DEST/.claude"
-    for p in CLAUDE.md .claude/settings.json; do
+    mkdir -p "$DEST/tools"
+    for p in CLAUDE.md .claude/settings.json tools/docsearch.py; do
       [[ -e "$DEST/$p" ]] && mv "$DEST/$p" "$DEST/$p.bak.$STAMP"
       cp "$TPL/$p" "$DEST/$p"
       echo "atualizado: $p"
@@ -95,12 +108,13 @@ case "$MODE" in
       exit 1
     fi
     cp -R "$TPL/." "$DEST/"
-    mkdir -p "$DEST/guides"
+    mkdir -p "$DEST/guides" "$DEST/refs"
     "$HERE/../obsidian/new-vault.sh" ${LITE:+$LITE} "$DEST/wiki"
     echo
     echo "Workspace criado em $DEST"
     echo "Próximos passos:"
     echo "  1. clonar os repos dentro dela:   git clone <url> \"$DEST/<nome>\""
+    echo "     (opcional) doc do ServiceNow:  $HERE/add-servicenow-docs.sh \"$DEST\""
     echo "  2. conferir:                       $0 --check \"$DEST\""
     echo "  3. abrir o Claude Code SEMPRE na raiz:  cd \"$DEST\" && claude"
     ;;

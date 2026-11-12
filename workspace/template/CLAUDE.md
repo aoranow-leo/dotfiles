@@ -11,6 +11,8 @@ The root itself is **not** a Git repository, and that is on purpose.
   .claude/settings.json  deny rules for the whole workspace
   guides/              step-by-step runbooks the human puts here (read-only for you)
   wiki/                local Obsidian wiki (no git). Its own CLAUDE.md applies inside it.
+  refs/                read-only reference clones (e.g. refs/servicenow-docs). Never edit or commit.
+  tools/               helper scripts (tools/docsearch.py)
   <repo>/              every other folder that contains .git is a client repository
 ```
 
@@ -37,3 +39,16 @@ when you start here; the human merges what matters from it into the root file.
 6. **guides/** are followed exactly when the human asks you to run one. If a step does not match
    what you see, stop and report; do not improvise.
 7. When you are not sure which folder a change belongs to, ask before writing.
+8. **refs/ is for reading only.** Never edit, delete, commit or push anything in `refs/`.
+
+## Looking things up in refs/
+
+To answer a platform question, search the reference docs instead of answering from memory:
+
+1. `python3 tools/docsearch.py search servicenow-docs <words>`: the 10 best-matching pages, with
+   path and snippet. Add `--area <area>` to narrow (`python3 tools/docsearch.py areas servicenow-docs`
+   lists them), `"quotes"` for a phrase, `-n 20` for more.
+2. Read the 1–3 pages that fit, by path. Cite the path (or the URL it shows) in your answer.
+3. Use `rg` (Grep) only for exact strings such as a table, property or API name, and limit it to
+   one area folder; across all of refs/ it returns thousands of lines.
+4. If nothing fits, say so. The docs match one release (see `git -C refs/servicenow-docs branch`).

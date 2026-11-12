@@ -57,7 +57,7 @@ Dois esqueletos de vault no padrão LLM Wiki, sem conteúdo:
 | Template | Para quê | O que tem |
 |---|---|---|
 | `obsidian/vault-template/` | vários projetos, modelo grande | 8 tipos de página, tarefas, specs, Bases, taxonomia |
-| `obsidian/vault-template-lite/` | um wiki simples, modelo menor (Sonnet/Haiku) | 3 tipos de página (`wiki/`, `fontes/`, `notas/`), `Tarefas.md` e `scripts/wiki.py` |
+| `obsidian/vault-template-lite/` | um wiki simples em inglês, modelo menor (Sonnet/Haiku) | 3 tipos de página (`wiki/`, `sources/`, `notes/`), `Tasks.md` e `scripts/wiki.py` |
 
 ```sh
 ~/dotfiles/obsidian/new-vault.sh ~/Documents/Wiki            # completo
@@ -84,7 +84,22 @@ cd ~/work/projeto && claude                                    # sempre na raiz
 - `CLAUDE.md` da raiz: o papel de cada pasta, um repo por tarefa (`git -C <repo> ...`), o wiki nunca vai para os repos, PR em draft, nada de dado de negócio.
 - `.claude/settings.json` da raiz: deny do SDK do ServiceNow (install, deploy, exec, cicd, auth --print/--add/--delete), de force-push, push na main/master, `gh pr merge`, `git init` e de leitura de `~/.now-sdk/`.
 - O Claude Code só lê o `.claude/settings.json` da pasta onde abre. Abrindo na raiz, o settings de cada repo **não vale**; o `--check` avisa quando um repo tem um, para você levar as regras dele para a raiz.
-- `--update` troca o `CLAUDE.md` e o `settings.json` da raiz (o anterior vira `.bak`). O wiki atualiza à parte com `new-vault.sh --update`.
+- `--update` troca o `CLAUDE.md`, o `settings.json` e o `tools/docsearch.py` da raiz (o anterior vira `.bak`). O wiki atualiza à parte com `new-vault.sh --update`.
+
+### Documentação de referência (refs/)
+
+`refs/` guarda clones só de leitura (deny de edição e de commit no settings). Para a doc oficial do ServiceNow ([ServiceNowDocs](https://github.com/ServiceNow/ServiceNowDocs), um branch por release):
+
+```sh
+~/dotfiles/workspace/add-servicenow-docs.sh ~/work/projeto                 # australia, áreas de plataforma/dev/CSM
+~/dotfiles/workspace/add-servicenow-docs.sh --release brazil --areas all ~/work/projeto
+~/dotfiles/workspace/add-servicenow-docs.sh --update ~/work/projeto        # versão nova + reindexa
+python3 tools/docsearch.py search servicenow-docs ui policy                 # 10 páginas mais relevantes
+python3 tools/docsearch.py search servicenow-docs "view rule" --area platform-user-interface
+```
+
+- Clone raso e esparso: só a release e as áreas pedidas (padrão ≈ 16 mil páginas, ~140 MB + ~120 MB de índice; tudo ≈ 51 mil, ~300 MB + índice).
+- `docsearch.py` é SQLite FTS5 (BM25) do próprio Python: índice local de ~1 min, nada sai da máquina. Devolve título, caminho, URL e um trecho, em vez das milhares de linhas de um grep.
 
 ## Regra
 
