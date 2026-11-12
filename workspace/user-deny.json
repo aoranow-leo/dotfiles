@@ -1,0 +1,33 @@
+{
+  "_comment": "Personal guardrails merged into ~/.claude/settings.json by new-workspace.sh --user-deny. They apply wherever Claude Code starts and add to each repo's own rules (deny wins over ask and allow).",
+  "deny": [
+    "Bash(now-sdk install*)",
+    "Bash(now-sdk deploy*)",
+    "Bash(now-sdk exec*)",
+    "Bash(now-sdk execute*)",
+    "Bash(now-sdk auth --print*)",
+    "Bash(now-sdk auth --add*)",
+    "Bash(now-sdk auth --delete*)",
+    "Bash(now-sdk cicd*)",
+    "Bash(now-sdk * install*)",
+    "Bash(now-sdk * deploy*)",
+    "Bash(now-sdk * exec*)",
+    "Bash(now-sdk * cicd*)",
+    "Bash(npx *@servicenow/sdk* install*)",
+    "Bash(npx *@servicenow/sdk* deploy*)",
+    "Bash(npx *@servicenow/sdk* exec*)",
+    "Bash(npx *@servicenow/sdk* auth --print*)",
+    "Bash(npx *@servicenow/sdk* auth --add*)",
+    "Bash(npx *@servicenow/sdk* auth --delete*)",
+    "Bash(npx *@servicenow/sdk* cicd*)",
+    "Bash(npx *now-sdk* install*)",
+    "Bash(npx *now-sdk* deploy*)",
+    "Bash(npx *now-sdk* exec*)",
+    "Bash(npx *now-sdk* auth --print*)",
+    "Bash(npx *now-sdk* cicd*)",
+    "Bash(npm run deploy*)",
+    "Bash(git init*)",
+    "Bash(gh pr merge*)",
+    "Read(~/.now-sdk/**)"
+  ]
+}

@@ -10,10 +10,11 @@ Python 3.8+, stdlib only (SQLite FTS5). Nothing leaves this machine.
   python3 tools/docsearch.py areas  <ref>             list the areas and how many pages each has
 
 <ref> is a folder name under refs/ (e.g. servicenow-docs). The index lives in refs/.search/<ref>.db.
-Words in "double quotes" are searched as a phrase. Results print title, path and a short snippet;
-open the file with the path to read it.
+Works from the workspace root or from inside a repo. Words in "double quotes" are searched as a phrase.
+Results print title, path (relative to where you are) and a short snippet; open the file by that path.
 """
 import argparse
+import os
 import re
 import sqlite3
 import subprocess
@@ -104,13 +105,13 @@ def cmd_index(a):
 def open_db(name):
     db = db_path(name)
     if not db.exists():
-        sys.exit(f"ERROR no index for refs/{name}. Run: python3 tools/docsearch.py index {name}")
+        sys.exit(f"ERROR no index for refs/{name}. Run: python3 {os.path.relpath(__file__)} index {name}")
     con = sqlite3.connect(db)
     row = con.execute("SELECT v FROM meta WHERE k='head'").fetchone()
     now = head_of(ref_dir(name))
     if row and now and row[0] != now:
         print(f"WARN  refs/{name} changed since the index was built. "
-              f"Run: python3 tools/docsearch.py index {name}")
+              f"Run: python3 {os.path.relpath(__file__)} index {name}")
     return con
 
 
@@ -147,7 +148,8 @@ def cmd_search(a):
                         + (" AND area = ?" if a.area else ""), [q] + ([a.area] if a.area else [])).fetchone()[0]
     print(f"{total} page(s) match {q}" + (f" in area {a.area}" if a.area else "") + f"; showing {len(rows)}")
     for i, (title, path, url, snip) in enumerate(rows, 1):
-        print(f"\n{i}. {title}\n   refs/{a.ref}/{path}" + (f"\n   {url}" if url else ""))
+        shown = os.path.relpath(REFS / a.ref / path)
+        print(f"\n{i}. {title}\n   {shown}" + (f"\n   {url}" if url else ""))
         print("   " + " ".join(snip.split())[:300])
     return 0
 
