@@ -19,8 +19,9 @@
 9. **Use agent-side tooling, not Obsidian plugins.** Emit **Mermaid** (native) or generate raw artifacts directly. Never assume a community plugin is installed.
 
 ### 0.1 Local policy (this machine) — edit if the situation differs
-- **No git, no remote, no sync.** Do not run `git init`, do not enable Obsidian Sync/Publish, do not add any cloud sync. The vault lives only on this machine.
+- **No git, no remote, no sync — in this folder.** Do not run `git init` here, do not enable Obsidian Sync/Publish, do not add any cloud sync. The vault lives only on this machine. If this vault sits next to Git repositories in a shared workspace, those repositories keep their normal Git workflow; this rule covers only the vault, and vault content is never copied into them.
 - **Content never leaves this machine.** Don't upload, paste or send vault content to external services. MCP servers / connectors only if the organization provides them.
+- **No business data.** Never store business records, personal data, credentials or tokens here. Record metadata, decisions and what you learned, not the data itself.
 - **No community plugins.** Only core plugins (Bases, Canvas, Templates, Properties, Daily notes…).
 - Never rely on an auto-formatter that rewrites files on save. Frontmatter consistency is the LINT operation (§4).
 

@@ -1,0 +1,39 @@
+# CLAUDE.md — workspace root
+
+This folder holds one or more client Git repositories and a local wiki side by side.
+The root itself is **not** a Git repository, and that is on purpose.
+
+## Layout
+
+```
+./                     workspace root (no git). Start Claude Code here.
+  CLAUDE.md            this file
+  .claude/settings.json  deny rules for the whole workspace
+  guides/              step-by-step runbooks the human puts here (read-only for you)
+  wiki/                local Obsidian wiki (no git). Its own CLAUDE.md applies inside it.
+  <repo>/              every other folder that contains .git is a client repository
+```
+
+Settings and hooks load only from the folder where Claude Code starts. Start it **here**, at the
+root, so `.claude/settings.json` applies. A repo's own `.claude/settings.json` does not apply
+when you start here; the human merges what matters from it into the root file.
+
+## Rules
+
+1. **One repository per task.** Name the repository in every Git command:
+   `git -C <repo> status`, `git -C <repo> switch -c <branch>`. Never run Git in the root or in
+   `wiki/`, and never run `git init` anywhere.
+2. **wiki/ and the repositories do not mix.** Never copy wiki pages, notes or raw sources into a
+   repository. You may read a repository file and record what it says in the wiki, linking to it
+   by path. The "no git" rule in `wiki/CLAUDE.md` covers only `wiki/`.
+3. **Repository work goes through a pull request.** Branch, commit, push the branch, open a
+   **draft** PR. Never push to `main` or `master`, never force-push, never merge. Inside a
+   repository, its own `CLAUDE.md` and README conventions come first.
+4. **No business data.** From instances and systems, read only metadata and configuration.
+   Never save business records, personal data, credentials or tokens in `wiki/` or in a
+   repository. If a command prints such data, do not save it; tell the human.
+5. **Never write to a remote system** (instances, ticketing, chat) unless the human asks for that
+   exact action. Some of these commands are blocked in settings; do not look for a way around.
+6. **guides/** are followed exactly when the human asks you to run one. If a step does not match
+   what you see, stop and report; do not improvise.
+7. When you are not sure which folder a change belongs to, ask before writing.
