@@ -123,6 +123,7 @@ Versão para o [Herdr app](https://herdr.dev) do tema Amazônia do Claude Code: 
 | `herdr-app/mods/amazonia/` | a cena animada, num painel da barra lateral |
 
 - O `install.sh` liga cada um em `~/.config/herdr-app/`. O que já existia lá vai para `~/.config/herdr-app.bak.<data>/`, fora da home do Herdr: lá dentro, uma pasta `mods/amazonia.bak.*` viraria um mod a mais.
+- Num Mac que já tem o próprio `.zshrc`, rode só esta parte: `ONLY=herdr ./install.sh`. Sem o `ONLY`, o script também troca o `.zshrc`, o atuin e o git.
 - Para usar: `Ctrl+Shift+L` até o layout **amazonia-rio**, ou `herdr-app do layout.switch '{"name":"amazonia-rio"}'`.
 - Transparência, em `layouts/amazonia-rio.json`: os dois últimos dígitos de `chrome` e `background` em `colors` (00 é invisível, ff é opaco) e `terminal_opacity`.
 - O fundo da janela é uma imagem parada: o Herdr não anima GIF nem a animação CSS de um SVG. O movimento fica no mod, com `loop` e `transition`, que o Herdr roda sozinho e pausa quando o painel não aparece.
