@@ -31,6 +31,7 @@ Os arquivos são links, então um `git pull` já muda o `.zshrc`. O `install.sh`
 | `atuin/config.toml` | `~/.config/atuin/config.toml` (link) | histórico só local (sem sync, sem update check) |
 | `git/gitconfig` | `include.path` no `~/.gitconfig` | delta, zdiff3, `push.autoSetupRemote` |
 | `Brewfile` | `brew bundle` | tudo que é instalado |
+| `herdr-app/…` | links em `~/.config/herdr-app/` | tema, layout e mod Amazônia do Herdr app |
 
 O que já existir vira `<arquivo>.bak.<data>`.
 
@@ -109,6 +110,24 @@ python3 ../tools/docsearch.py search servicenow-docs "view rule" --area platform
 
 - Clone raso e esparso: só a release e as áreas pedidas (padrão ≈ 16 mil páginas, ~140 MB + ~120 MB de índice; tudo ≈ 51 mil, ~300 MB + índice).
 - `docsearch.py` é SQLite FTS5 (BM25) do próprio Python: índice local de ~1 min, nada sai da máquina. Devolve título, caminho, URL e um trecho, em vez das milhares de linhas de um grep.
+
+## Herdr app (tema Amazônia)
+
+Versão para o [Herdr app](https://herdr.dev) do tema Amazônia do Claude Code: o rio ao entardecer, com floresta, araras, boto, canoa e vaga-lumes.
+
+| Arquivo | O quê |
+|---|---|
+| `herdr-app/themes/amazonia.json` | só as cores (verde da mata, destaque urucum); serve em qualquer layout pelo seletor de tema |
+| `herdr-app/layouts/amazonia-rio.json` | cópia do layout `main` com a cena de fundo e painéis translúcidos |
+| `herdr-app/backgrounds/amazonia.png` | a cena parada, atrás da janela toda |
+| `herdr-app/mods/amazonia/` | a cena animada, num painel da barra lateral |
+
+- O `install.sh` liga cada um em `~/.config/herdr-app/`. O que já existia lá vai para `~/.config/herdr-app.bak.<data>/`, fora da home do Herdr: lá dentro, uma pasta `mods/amazonia.bak.*` viraria um mod a mais.
+- Para usar: `Ctrl+Shift+L` até o layout **amazonia-rio**, ou `herdr-app do layout.switch '{"name":"amazonia-rio"}'`.
+- Transparência, em `layouts/amazonia-rio.json`: os dois últimos dígitos de `chrome` e `background` em `colors` (00 é invisível, ff é opaco) e `terminal_opacity`.
+- O fundo da janela é uma imagem parada: o Herdr não anima GIF nem a animação CSS de um SVG. O movimento fica no mod, com `loop` e `transition`, que o Herdr roda sozinho e pausa quando o painel não aparece.
+- O Herdr escreve `jsconfig.json` e `*.d.ts` dentro da pasta do mod; o `herdr-app/.gitignore` deixa esses arquivos de fora.
+- Mudou o mod? Rode `herdr-app check ~/.config/herdr-app/mods/amazonia` antes de commitar.
 
 ## Regra
 

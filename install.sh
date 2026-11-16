@@ -45,6 +45,30 @@ link() {
 link zsh/zshrc          "$HOME/.zshrc"
 link atuin/config.toml  "$HOME/.config/atuin/config.toml"
 
+# Herdr app: tema, layout e mod Amazônia. O backup vai para fora da home do
+# Herdr, senão uma pasta mods/amazonia.bak.* viraria um mod a mais.
+HERDR="$HOME/.config/herdr-app"
+HERDR_BAK="$HOME/.config/herdr-app.bak.$STAMP"
+link_herdr() {
+  local src="$DIR/herdr-app/$1" dst="$HERDR/$1"
+  mkdir -p "${dst:h}"
+  if [[ -L "$dst" && "$(readlink "$dst")" == "$src" ]]; then
+    return
+  fi
+  if [[ -e "$dst" || -L "$dst" ]]; then
+    mkdir -p "$HERDR_BAK/${1:h}"
+    mv "$dst" "$HERDR_BAK/$1"
+    say "backup: $dst -> $HERDR_BAK/$1"
+  fi
+  ln -s "$src" "$dst"
+  say "link: $dst -> $src"
+}
+link_herdr themes/amazonia.json
+link_herdr layouts/amazonia-rio.json
+link_herdr layouts/amazonia-rio.png
+link_herdr backgrounds/amazonia.png
+link_herdr mods/amazonia
+
 # 3. git: inclui a config compartilhada sem mexer em user.name/email
 if ! git config --global --get-all include.path 2>/dev/null | grep -qxF "$DIR/git/gitconfig"; then
   git config --global --add include.path "$DIR/git/gitconfig"
